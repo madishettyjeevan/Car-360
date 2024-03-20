@@ -29,6 +29,7 @@ router.post("/register-admin", async(req, res) => {
     }
 });
 
+//Route handler for fetching all cars from the database and responding with JSON, handling errors appropriately.
 router.post("/login-admin", async(req, res) => {
     try{
         const {email, password} = req.body;
