@@ -5,7 +5,7 @@ import Signupp from './components/signup/signup';
 import Login from './components/login/login';
 import Dashboard from './components/dashboard/dashboard';
 import AddCar from './components/addCar/addCar';
-// import ViewCars from './components/viewCar/viewCar';
+import ViewCars from './components/viewCar/viewCar';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       <Route path="/signup" element={<Signupp />} />
       <Route path="/dashboard/:userName" element={<Dashboard />} />
       <Route path="/add-car/:userName" element={<AddCar />} />
-      {/* <Route path="/view-cars/:userName" element={<ViewCars />} /> */}
+      <Route path="/view-cars/:userName" element={<ViewCars />} />
     </Routes>
   );
 }
