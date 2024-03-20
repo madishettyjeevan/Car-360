@@ -1,0 +1,96 @@
+/* src/components/Login.css */
+/* Additions to src/components/Login.css */
+.login-title {
+    color: #5D54A4; /* Matching the color theme */
+    text-align: center;
+    margin-bottom: 0.5rem; /* Keeping the spacing tight */
+    font-size: 2.5rem; /* Large and in charge */
+    font-weight: bold; /* Making it pop */
+}
+
+.login-motivation {
+    color: #666; /* Subtle yet readable */
+    text-align: center;
+    margin-bottom: 2rem; /* Providing space before the form */
+    font-size: 1rem;
+    padding: 0 20px; /* Ensuring it doesn't stretch too wide on larger screens */
+}
+
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #5D54A4, #7C78B8);
+}
+
+.login-box {
+    width: 400px;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.login-box h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 0;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #5D54A4;
+    outline: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.input-group input:focus, .input-group input:valid {
+    border-bottom-color: #7C78B8;
+}
+
+.input-group label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #666;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.input-group input:focus ~ label, .input-group input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #7C78B8;
+    font-size: 12px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #5D54A4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #7C78B8;
+}
