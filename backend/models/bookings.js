@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const bookingSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema({    // Defining bookingSchema using mongoose.Schema constructor
     carId: {
         type: String,
         required: true
