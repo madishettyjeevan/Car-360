@@ -9,7 +9,7 @@ const s3 = require("../middleware/s3");
 
 const {carImageUpload } = require("../multer");
 
-
+//this is ass car route.
 router.post("/add-car/:brand/:model",carImageUpload,  async (req, res) => {
     try {
         const {brand,model,year,color,price,stock,description} = req.body
