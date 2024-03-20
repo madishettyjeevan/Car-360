@@ -4,6 +4,7 @@ const router = express.Router();
 const Admin = require("../models/admin");
 const Customer = require("../models/customer");
 
+//// Route handler for handling POST requests to login an administrator
 
 router.post("/register-admin", async(req, res) => {
     try{
