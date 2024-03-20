@@ -45,5 +45,6 @@ router.post("/login-admin", async(req, res) => {
         return res.status(500).json({message:"Internal server error"});
     }
 })
+//Exporting the router object to make defined routes accessible in other modules
 
 module.exports = router;
