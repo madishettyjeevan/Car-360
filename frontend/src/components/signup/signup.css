@@ -1,0 +1,14 @@
+.alternate-action {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.alternate-action a {
+    color: #4ECCA3;
+    text-decoration: none;
+}
+
+.alternate-action a:hover {
+    text-decoration: underline;
+}
