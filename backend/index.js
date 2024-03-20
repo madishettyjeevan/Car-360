@@ -1,6 +1,7 @@
 const express=require("express"); // importing the express framework
 const app=express();
 
+// Load environment variables, configure CORS, and connect to MongoDB Atlas cluster.
 const dotenv = require("dotenv");
 dotenv.config({ path: __dirname+'/.env' });
 console.log(process.env.AWS_BUCKET_NAME);
