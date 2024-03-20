@@ -32,6 +32,7 @@ router.post("/add-car/:brand/:model",carImageUpload,  async (req, res) => {
     }
 });
 
+// Endpoint to retrieve all cars from the database and respond with JSON data. Errors are logged and returned with a 500 status code if encountered.
 router.get(("/get-cars"), async (req, res) => {
     try {
         const cars = await Car.find();
