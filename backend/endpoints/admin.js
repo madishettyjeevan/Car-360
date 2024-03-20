@@ -32,4 +32,13 @@ router.post("/add-car/:brand/:model",carImageUpload,  async (req, res) => {
     }
 });
 
+router.get(("/get-cars"), async (req, res) => {
+    try {
+        const cars = await Car.find();
+        return res.status(200).json(cars);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
 module.exports = router;
