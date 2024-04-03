@@ -3,7 +3,8 @@ const router = express.Router();
 const { default: mongoose } = require("mongoose");
 
 const Booking = require("../models/Bookings");
-const Car = require("../models/Cars");
+const Car = require("../models/cars");
+
 router.post("/book/:userId/:carId", async(req, res)=>{
     try{
         const { userId, carId } = req.params;
@@ -46,18 +47,14 @@ router.post("/book/:userId/:carId", async(req, res)=>{
     }
 });
 
-router.get("/bookings/:userId", async(req, res)=>{
-    try{
-        const userId = req.params.userId
-        const bookings = await Booking.find({user: new mongoose.Types.ObjectId(userId)})
-        .select('bookingActive totalPrice endDate startDate')
-        .populate({
-            path: 'car',
-            select: 'imageUrl brand model'
-        });
-        res.status(200).json(bookings);
-    }catch(error){
+router.get("/get-cars/except/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const cars = await Car.find({owner: {$ne: new mongoose.Types.ObjectId(userId)}, currentlyBooked:false});
+        return res.status(200).json(cars);
+    } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Something went wrong..."});
     }
 });
+
