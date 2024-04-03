@@ -4,7 +4,7 @@ const fs = require("fs");
 const { url } = require('inspector');
 
 //configuring the s3 object
-//to get the access of the respective bucket
+//to get the access of the  bucket 
 const s3= new S3({})
 
 //upload a file to S3
