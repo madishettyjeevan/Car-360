@@ -45,3 +45,19 @@ router.post("/book/:userId/:carId", async(req, res)=>{
         res.status(500).json({ message: "Something went wrong..."});
     }
 });
+
+router.get("/bookings/:userId", async(req, res)=>{
+    try{
+        const userId = req.params.userId
+        const bookings = await Booking.find({user: new mongoose.Types.ObjectId(userId)})
+        .select('bookingActive totalPrice endDate startDate')
+        .populate({
+            path: 'car',
+            select: 'imageUrl brand model'
+        });
+        res.status(200).json(bookings);
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong..."});
+    }
+});
