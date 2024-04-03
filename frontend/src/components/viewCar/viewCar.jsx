@@ -1,10 +1,12 @@
 import React,{useEffect,useState} from 'react';
 import './viewCar.css'; 
 import axios from '../../axios';
-
+import { useNavigate,useParams } from 'react-router-dom';
 
 
 const ViewCars = () => {
+    const {userName} = useParams();
+    const navigate = useNavigate();
     const [cars, setCars] = useState([]);
     useEffect(() => {
         const fetchBooks = async () => {
@@ -20,6 +22,7 @@ const ViewCars = () => {
     })
     return (
         <div className="cars-container">
+            
             {cars&&cars.map((car) => (
                 <div key={car.id} className="car-card">
                     <img src={car.image} alt={`${car.brand} ${car.model}`} />

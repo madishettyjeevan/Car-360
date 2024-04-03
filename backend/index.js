@@ -29,8 +29,8 @@ app.use(express.urlencoded({
 const authRoutes = require("./endpoints/authEndpoints");
 app.use("/auth", authRoutes);
 
-// const adminRoutes = require("./endpoints/admin");
-// app.use("/admin", adminRoutes);
+const adminRoutes = require("./endpoints/admin");
+app.use("/admin", adminRoutes);
 
 
 app.all("/*",(req,res)=>{

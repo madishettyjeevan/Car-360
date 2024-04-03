@@ -1,8 +1,8 @@
 import './App.css';
 import {  Routes, Route } from 'react-router-dom';
 
-import Signupp from './components/signup/signup';
 import Login from './components/login/login';
+import Signupp from './components/signup/signup';
 import Dashboard from './components/dashboard/dashboard';
 import AddCar from './components/addCar/addCar';
 import ViewCars from './components/viewCar/viewCar';
