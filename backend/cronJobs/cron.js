@@ -25,3 +25,31 @@ cron.schedule('*/10 * * * *', async () => {
     console.error('Error processing bookings:', error);
   }
 });
+// 2) Cron job to send an email when booked time hits 80% (runs every 15 minutes)
+cron.schedule('*/15 * * * *', async () => {
+  try {
+    const currentTime = new Date();
+    const bookings = await Booking.find({bookingActive: true, bookingTBENotification: false}).populate('car').populate('user');
+
+    bookings.forEach( async(booking) => {
+      const totalDuration = booking.endDate - booking.startDate;
+      const eightyPercent = totalDuration * 0.8;
+
+      if (currentTime - booking.startDate >= eightyPercent) {
+
+        const emailResponse = await sendEmail(
+          booking.user.username,
+          booking.user.email,
+          'Booking Reminder',
+          Dear ${booking.user.username},\n\nYour booking for car ${booking.car.brand} ${booking.car.model} will end soon.
+        )
+        if(emailResponse){
+          booking.bookingTBENotification = true;
+          await booking.save();
+        }
+      }
+        });
+  } catch (error) {
+    console.error('Error processing bookings:', error);
+  }
+});
