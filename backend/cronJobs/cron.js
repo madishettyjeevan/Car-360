@@ -25,6 +25,7 @@ cron.schedule('*/10 * * * *', async () => {
     console.error('Error processing bookings:', error);
   }
 });
+
 // 2) Cron job to send an email when booked time hits 80% (runs every 15 minutes)
 cron.schedule('*/15 * * * *', async () => {
   try {
@@ -41,7 +42,7 @@ cron.schedule('*/15 * * * *', async () => {
           booking.user.username,
           booking.user.email,
           'Booking Reminder',
-          Dear ${booking.user.username},\n\nYour booking for car ${booking.car.brand} ${booking.car.model} will end soon.
+          `Dear ${booking.user.username},\n\nYour booking for car ${booking.car.brand} ${booking.car.model} will end soon.`
         )
         if(emailResponse){
           booking.bookingTBENotification = true;
@@ -51,5 +52,33 @@ cron.schedule('*/15 * * * *', async () => {
         });
   } catch (error) {
     console.error('Error processing bookings:', error);
+  }
+});
+
+// 3) Cron job to send an email when booking expires (runs every 5 minutes)
+cron.schedule('*/5 * * * *', async () => {
+  try {    
+    const currentTime = new Date();
+    const expiredBookings = await Booking.find({bookingActive: true, endDate: { $lt: currentTime }, bookingEndNotification: false }).populate('car').populate('user');
+    expiredBookings.forEach( async(booking) => {
+
+      const emailResponse = await sendEmail(
+        booking.user.username,
+        booking.user.email,
+        'Booking Expired',
+        `Dear ${booking.user.username},\n\nYour booking for car ${booking.car.brand} ${booking.car.model} has expired.`
+      )
+      if(emailResponse){
+          booking.bookingEndNotification = true;
+          booking.bookingActive = false;
+          await booking.save();
+
+          const car = await Cars.findOne({_id: new mongoose.Types.ObjectId(booking.car._id)});
+          car.currentlyBooked = false;
+          await car.save();
+      }
+    });
+  } catch (error) {
+    console.error('Error processing expired bookings:', error);
   }
 });
