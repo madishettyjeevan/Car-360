@@ -1,22 +1,41 @@
-import './App.css';
-import {  Routes, Route } from 'react-router-dom';
+import "./index.css";
 
-import Login from './components/login/login';
-import Signupp from './components/signup/signup';
-import Dashboard from './components/dashboard/dashboard';
-import AddCar from './components/addCar/addCar';
-import ViewCars from './components/viewCar/viewCar';
+import React, { useState } from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UserContext } from "./context/context";
 
-function App() {
+import Dashboard from "./components/dashboard/dashboard";
+import AddCar from "./components/addCar/addCar";
+import ViewListings from "./components/viewListings/viewListings";
+import ViewBookings from "./components/viewBookings/viewBookings";
+import ViewAvailable from "./components/viewAvailable/viewAvailable";
+import BookCar from "./components/bookCar/bookCar";
+import Login from "./components/login/login";
+import Signup from "./components/signup/signup";
+
+export default function App() {
+  const [user, setUser] = useState({});
+
+  const [carToBeBooked, setCarToBeBooked] = useState({});
+
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/signup" element={<Signupp />} />
-      <Route path="/dashboard/:userName" element={<Dashboard />} />
-      <Route path="/add-car/:userName" element={<AddCar />} />
-      <Route path="/view-cars/:userName" element={<ViewCars />} />
-    </Routes>
+    <BrowserRouter>
+      <UserContext.Provider value={user}>
+        <Routes>
+          <Route path="/" element={<Login setUser={setUser} />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-car" element={<AddCar />} />
+          <Route path="/view-listings" element={<ViewListings/>} />
+          <Route path="/view-bookings" element={<ViewBookings/>} />
+          <Route path="/view-available" element={<ViewAvailable setCarToBeBooked={setCarToBeBooked}/>} />
+          <Route path="/view-available/:carId" element={<BookCar carToBeBooked={carToBeBooked}/>} />
+        </Routes>
+      </UserContext.Provider>
+    </BrowserRouter>
   );
 }
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
