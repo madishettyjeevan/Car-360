@@ -76,3 +76,5 @@ router.get("/get-cars/only/:userId", async (req, res) => {
         res.status(500).json({ message: "Something went wrong..."});
     }
 });
+
+module.exports = router;
