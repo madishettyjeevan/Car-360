@@ -1,11 +1,34 @@
 const express = require("express");
 const router = express.Router();
 
-const Admin = require("../models/admin");
-const Customer = require("../models/customer");
+const User = require("../models/Users");
 
-//// Route handler for handling POST requests to login an administrator
 
+router.post("/register-user", async(req, res) => {
+    try{
+        const {email, password, username} = req.body;
+        if(!email || !username || !password){
+            return res.status(400).json({message: "Please key in all the required details"});
+        }
+        const isEmailExist = await User.findOne({email:email});
+        if(isEmailExist){
+            return res.status(400).json({message:"Email already exists"});
+        }
+        if(password.length < 5){
+            return res.status(400).json({message:"Password must be at least 6 characters long"});
+        }
+        const newUser = new User({
+            email: email,
+            password: password,
+            username
+        })
+        await newUser.save();
+        return res.status(200).json({message:"User registered successfully"});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message:"Internal server error"});
+    }
+});
 
 //Exporting the router object to make defined routes accessible in other modules
 
