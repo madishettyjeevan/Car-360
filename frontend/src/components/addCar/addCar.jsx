@@ -1,29 +1,23 @@
-import React,{useState} from 'react';
-import './addCar.css';
-import { useNavigate,useParams } from 'react-router-dom';
+import { Form, Button, Row, Col } from 'react-bootstrap';
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { UserContext } from '../../context/context';
+import Loader from '../../components/loader/loader';
+import PopUp from "../../components/popup/popup";
+import NavBar from "../Navbar/Navbar";
 import axios from '../../axios';
 
-import PopUp from "../../components/popup/popup";
-import Loader from '../../components/loader/loader';
+import './addCar.css';
 
 const AddCar = () => {
 
-    const {userName} = useParams();
-
-    const navigate = useNavigate();
-    const [brand, setbrand] = useState('');
-    const [model, setmodel] = useState('');
-    const [year, setyear] = useState('');
-    const [color, setcolor] = useState('');
-    const [price, setprice] = useState('');
-    const [description, setdescription] = useState('');
-    const [stock, setstock] = useState('');
-    const [image, setimage] = useState('');
-
-
+    const { userId, isLoggedIn } = useContext(UserContext)
+    const navigate = useNavigate()
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [popUpText, setpopUpText] = useState("")
+    const [popUpText, setPopUpText] = useState("");
+    // eslint-disable-next-line
     const [isBackgroundBlurred, setIsBackgroundBlurred] = useState(false);
     const blurredBackgroundStyles = isBackgroundBlurred
         ? {
@@ -38,150 +32,102 @@ const AddCar = () => {
         }
         : {};
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        let formData = new FormData();
-        formData.append('brand', brand);
-        formData.append('model', model);
-        formData.append('year', year);
-        formData.append('color', color);
-        formData.append('price', price);
-        formData.append('stock', stock);
-        formData.append('description', description);
-        formData.append('carImage', image);
-        console.log(image)
-        try{
-            for (var pair of formData.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
-            }
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setPopUpText("Unautharized..., Please Log in...");
+            setIsPopUpOpen(true);
+        }
+    // eslint-disable-next-line
+    }, []);
+
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            const formData = new FormData(e.target);
             setLoading(true);
-            const response = await axios.post(`/admin/add-car/${brand}/${model}`, formData,{
+            // eslint-disable-next-line
+            const response = await axios.post(`/car/add-car/${userId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            setpopUpText("Car Added Successfully");
+            setPopUpText("Car Added Successfully");
             setIsPopUpOpen(true);
-            setLoading(false);
-            setbrand('');
-            setmodel('');
-            setyear('');
-            setcolor('');
-            setprice('');
-            setdescription('');
-            setstock('');
-            setimage('');
-        }catch(error){
+        } catch (error) {
             console.log(error);
-            console.log(error);
-            setLoading(false);
-            if(error?.response?.data?.message){
-                setpopUpText(error?.response?.data?.message);
+            if (error?.response?.data?.message) {
+                setPopUpText(error?.response?.data?.message);
             }
-            else{
-                setpopUpText("Something Went Wrong")
+            else {
+                setPopUpText("Something Went Wrong")
             }
             setIsPopUpOpen(true);
+        } finally {
+            setLoading(false);
         }
     };
 
-    
-
-
-    
-
     return (
-        <div className="add-car-container">
+        <>
+            <NavBar />
+            <Row className="my-1 mx-5 add-car-container">
+                <Col md={12} className="add-car-sub-container">
+                    <h2 className="main_text text-center">Add Your Car to Our Fleet, Now!!!</h2>
+                    <Form className="add-car-form" onSubmit={handleSubmit}>
+                        <Row>
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="brand">
+                                    <Form.Label>Brand</Form.Label>
+                                    <Form.Control type="text" name="brand" required />
+                                </Form.Group>
+                                <Form.Group controlId="model">
+                                    <Form.Label>Model</Form.Label>
+                                    <Form.Control type="text" name="model" required />
+                                </Form.Group>
+                                <Form.Group controlId="color">
+                                    <Form.Label>Color</Form.Label>
+                                    <Form.Control type="text" name="color" required />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="price">
+                                    <Form.Label>Price</Form.Label>
+                                    <Form.Control type="text" name="price" required />
+                                </Form.Group>
+                                <Form.Group controlId="year">
+                                    <Form.Label>Year of Manufacture</Form.Label>
+                                    <Form.Control type="number" name="year" required />
+                                </Form.Group>
+                                <Form.Group controlId="image">
+                                    <Form.Label>Car Image</Form.Label>
+                                    <Form.Control type="file" name="carImage" accept="image/*" required />
+                                </Form.Group>
+                            </Col>
+                            <Form.Group controlId="description">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control as="textarea" name='description' rows={3} />
+                            </Form.Group>
+                        </Row>
+                        <div className="text-center">
+                            <Button className='my-4' id="main_button" type="submit">Add Car</Button>
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+
             {isBackgroundBlurred && <div style={blurredBackgroundStyles} />}
             {loading && <Loader />}
-            <div className="form-navigation">
-                <button onClick={() => navigate(-1)} className="nav-button">Back</button>
-                <button onClick={() => navigate(`/view-cars/${userName}`)} className="nav-button">View Cars</button>
-            </div>
-            <div className="add-car-sub-container">
-                <h2>Add New Car to Inventory</h2>
-                <form className="add-car-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="brand">Brand</label>
-                        <input 
-                            type="text" 
-                            id="brand" 
-                            value={brand}
-                            onChange={(e) => setbrand(e.target.value)}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="model">Model</label>
-                        <input 
-                            type="text" 
-                            id="model" 
-                            value={model}
-                            onChange={(e) => setmodel(e.target.value)}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="color">color</label>
-                        <input 
-                            type="text" 
-                            id="color" 
-                            value={color}
-                            onChange={(e) => setcolor(e.target.value)}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="year">Year</label>
-                        <input 
-                            type="number" 
-                            id="year"
-                            value={year}
-                            onChange={(e) => setyear(e.target.value)}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="price">Price</label>
-                        <input 
-                            type="text" 
-                            value={price}
-                            onChange={(e) => setprice(e.target.value)}
-                            id="price" 
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <input 
-                            type="text" 
-                            value={description}
-                            onChange={(e) => setdescription(e.target.value)}
-                            id="description" 
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="stock">Stock</label>
-                        <input 
-                            type="text" 
-                            id="stock" 
-                            value={stock}
-                            onChange={(e) => setstock(e.target.value)}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="image">Car Image</label>
-                        <input 
-                            type="file" 
-                            id="image" 
-                            onChange={(e) => setimage(e.target.files[0])}
-                            accept="image/*" />
-                    </div>
-                    
-                    <button type="submit">Add Car</button>
-                </form>
-            </div>
             <PopUp
                 isOpen={isPopUpOpen}
-                close={() => setIsPopUpOpen(false)}
+                close={() => {
+                    setIsPopUpOpen(false)
+                    if(!isLoggedIn){
+                        navigate("/");
+                    }
+                }}
                 text={popUpText}
             />
-        </div>
+        </>
     );
 };
 
