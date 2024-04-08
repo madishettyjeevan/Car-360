@@ -29,6 +29,22 @@ router.post("/register-user", async(req, res) => {
         return res.status(500).json({message:"Internal server error"});
     }
 });
+router.post("/login-user", async(req, res) => {
+    try{
+        const {email, password} = req.body;
+        const existingUser = await User.findOne({email:email}).lean();
+        if(!existingUser){
+            return res.status(400).json({message:"Email not found"});
+        }
+        if(password !== existingUser.password){
+            return res.status(400).json({message:"Password is incorrect"});
+        }
+        return res.status(200).json({message:"User logged in successfully",user:existingUser});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message:"Internal server error"});
+    }
+});
 
 //Exporting the router object to make defined routes accessible in other modules
 
