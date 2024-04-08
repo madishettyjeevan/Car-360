@@ -31,3 +31,13 @@ router.post("/add-car/:userId", carImageUpload,  async (req, res) => {
         res.status(500).json({ message: "Something went wrong..."});
     }
 });
+router.get("/get-cars/except/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const cars = await Car.find({owner: {$ne: new mongoose.Types.ObjectId(userId)}, currentlyBooked:false});
+        return res.status(200).json(cars);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong..."});
+    }
+});
