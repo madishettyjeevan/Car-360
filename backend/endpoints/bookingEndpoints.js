@@ -92,3 +92,38 @@ router.get("/get-cars/only/:userId", async (req, res) => {
     }
 });
 
+router.get("/renewe-ars/only/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const carDetails = [];
+        const cars = await Car.find({ owner: new mongoose.Types.ObjectId(userId) });
+        for(const element of cars){
+            let details = {
+                brand: element.brand,
+                description: element.description,
+                imageUrl: element.imageUrl,
+                price: element.price,
+                color: element.color,
+                year: element.year,
+                model: element.model,
+                currentlyBooked: element.currentlyBooked
+            };
+            if(element.currentlyBooked){
+                const bookingDetails = await Booking.findOne({car: element._id, bookingActive: true}).populate('user');
+                details = {
+                    ...details,
+                    bookedBy: bookingDetails.user.username,
+                    bookingStart: bookingDetails.startDate,
+                    bookingEnd: bookingDetails.endDate,
+                    totalPrice: bookingDetails.totalPrice
+                }
+            }
+            carDetails.push(details);
+        }
+        return res.status(200).json(carDetails);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong..."});
+    }
+});
+
