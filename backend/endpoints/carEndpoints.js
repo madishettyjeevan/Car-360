@@ -31,10 +31,55 @@ router.post("/add-car/:userId", carImageUpload,  async (req, res) => {
         res.status(500).json({ message: "Something went wrong..."});
     }
 });
+
 router.get("/get-cars/except/:userId", async (req, res) => {
     try {
         const userId = req.params.userId;
-        const cars = await Car.find({owner: {$ne: new mongoose.Types.ObjectId(userId)}, currentlyBooked:false});
+        const cars = await Car.aggregate([
+            {
+                $match: {
+                    owner: { $ne: new mongoose.Types.ObjectId(userId) }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'bookings',
+                    let: { car_id: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$car', '$$car_id'] },
+                                        { $eq: ['$bookingActive', true] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: { endDate: 1 }
+                        }
+                    ],
+                    as: 'bookingDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$bookingDetails',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $addFields: {
+                    endDate: '$bookingDetails.endDate'
+                }
+            },
+            {
+                $project: {
+                    bookingDetails: 0
+                }
+            }
+            ]);
         return res.status(200).json(cars);
     } catch (error) {
         console.log(error);
