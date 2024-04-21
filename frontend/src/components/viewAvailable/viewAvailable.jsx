@@ -67,7 +67,7 @@ export default function ViewAvailable({ setCarToBeBooked }) {
         } else {
             fetchCars();
         }
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
     return (
@@ -81,8 +81,8 @@ export default function ViewAvailable({ setCarToBeBooked }) {
                 <Row>
                     {cars.length > 0 ? (
                         cars.map((car, index) => (
-                            <Col xs={12} md={6} lg={4}>
-                                <Card className="car-card my-3" key={index}>
+                            <Col xs={12} md={6} lg={4} key={car._id}>
+                                <Card className="car-card my-3" key={car._id}>
                                     <Card.Img
                                         src={car.imageUrl}
                                         alt={`${car.brand} ${car.model}`}
@@ -101,7 +101,14 @@ export default function ViewAvailable({ setCarToBeBooked }) {
                                                 <Card.Text>Color: {car.color}</Card.Text>
                                             </Col>
                                         </Row>
-                                        <Button id="main_button" className='button my-4' onClick={() => handleBookClick(car)}>Book Now</Button>
+                                        {
+                                            car.currentlyBooked ?
+                                                <Card.Text className='my-2'>
+                                                    <b>Next Available at {new Date(car.endDate).toLocaleString()}</b>
+                                                </Card.Text>
+                                                :
+                                                <Button id="main_button" className='button my-4' onClick={() => handleBookClick(car)}>Book Now</Button>
+                                        }
                                     </Card.Body>
                                 </Card>
                             </Col>
