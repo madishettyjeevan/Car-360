@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../../context/context';
@@ -58,6 +58,40 @@ export default function ViewBookings() {
         }
     };
 
+    const renewbooking = async (e) => {
+        e.preventDefault();
+        const formElement = e.target;
+        try {
+            const formData = new FormData(formElement);
+            const bookingData = {
+                hours: formData.get('hours')
+            }
+            const carId = formData.get('carId');
+            console.log(carId)
+            setLoading(true);
+            const response = await axios.post(`/booking/renew/${userId}/${carId}`, bookingData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            formElement.reset();
+            await fetchbookings();
+            setPopUpText(response.data.message);
+            setIsPopUpOpen(true);
+        } catch (error) {
+            console.log(error);
+            if (error?.response?.data?.message) {
+                setPopUpText(error?.response?.data?.message);
+            }
+            else {
+                setPopUpText("Something Went Wrong")
+            }
+            setIsPopUpOpen(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (!isLoggedIn) {
             setPopUpText("Unautharized..., Please Log in...");
@@ -92,7 +126,20 @@ export default function ViewBookings() {
                                         <Card.Text>Booking Start: {new Date(booking.startDate).toLocaleString()}</Card.Text>
                                         <Card.Text>Booking End: {new Date(booking.endDate).toLocaleString()}</Card.Text>
                                         <Card.Text>Total cost: ${booking.totalPrice}</Card.Text>
-
+                                        <h3 className='mt-5 text-center' style={{ color: '#5D54A4' }}>Renew 🤔🤔</h3>
+                                        <Form onSubmit={renewbooking} className='my-1'>
+                                            <Row>
+                                                <input name="carId" value={booking.car._id} hidden/>
+                                                <Col className="my-2" xs={12} md={6} lg={6}>
+                                                    <Form.Group controlId="startDate">
+                                                        <Form.Control min="1" type="number" name="hours" placeholder="No. of hours" className="no-spinner" required/>
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col className="my-2" xs={12} md={6} lg={6}>
+                                                    <Button id="main_button" type='submit'>Renew</Button>
+                                                </Col>
+                                            </Row>
+                                        </Form>
                                     </Card.Body>
                                 </Card>
                             </Col>
