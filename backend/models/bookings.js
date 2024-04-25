@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
-const bookingSchema = new mongoose.Schema({    // Defining bookingSchema using mongoose.Schema constructor
-    carId: {
-        type: String,
+const bookingSchema = new mongoose.Schema({
+    car: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Car',
         required: true
     },
-    customerId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Customer',
+        ref: 'User',
         required: true
     },
     startDate: {
@@ -19,9 +20,25 @@ const bookingSchema = new mongoose.Schema({    // Defining bookingSchema using m
         required: true
     },
     totalPrice: {
-        type: Number,
-        required: true
+        type:Number,
+        required:true
+    },
+    bookingStartNotification: {
+        type:Boolean,
+        default:false
+    },
+    bookingTBENotification: {
+        type:Boolean,
+        default:false
+    },
+    bookingEndNotification: {
+        type:Boolean,
+        default:false
+    },
+    bookingActive: {
+        type:Boolean,
+        default:true
     }
-})
+});
 
 module.exports = mongoose.model('Booking', bookingSchema);
