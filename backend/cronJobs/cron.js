@@ -6,7 +6,7 @@ const Cars = require('../models/Cars');
 const { default: mongoose } = require('mongoose');
 
 // 1) Cron job to send an email when someone books a car (runs every 10 minutes)
-cron.schedule('*/10 * * * *', async () => {
+cron.schedule('*/1 * * * *', async () => {
   try {
     const bookings = await Booking.find({bookingActive: true, bookingStartNotification: false}).populate('car').populate('user');
     bookings.forEach(async(booking) => {
@@ -27,7 +27,7 @@ cron.schedule('*/10 * * * *', async () => {
 });
 
 // 2) Cron job to send an email when booked time hits 80% (runs every 15 minutes)
-cron.schedule('*/15 * * * *', async () => {
+cron.schedule('*/2 * * * *', async () => {
   try {
     const currentTime = new Date();
     const bookings = await Booking.find({bookingActive: true, bookingTBENotification: false}).populate('car').populate('user');
@@ -56,7 +56,7 @@ cron.schedule('*/15 * * * *', async () => {
 });
 
 // 3) Cron job to send an email when booking expires (runs every 5 minutes)
-cron.schedule('*/5 * * * *', async () => {
+cron.schedule('*/3 * * * *', async () => {
   try {    
     const currentTime = new Date();
     const expiredBookings = await Booking.find({bookingActive: true, endDate: { $lt: currentTime }, bookingEndNotification: false }).populate('car').populate('user');
