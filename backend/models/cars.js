@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const carSchema = new mongoose.Schema({
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     brand: {
         type: String,
         required: true
@@ -21,11 +26,7 @@ const carSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    stock:{
-        type: Number,
-        required: true
-    },
-    image: {
+    imageUrl: {
         type: String,
         required: true
     },
@@ -33,8 +34,9 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    rating: {
-        type: Number,
+    currentlyBooked: {
+        type: Boolean,
+        default: false
     }
 });
 
