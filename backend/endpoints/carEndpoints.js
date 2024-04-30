@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Car = require("../models/Cars");
-const Booking = require("../models/Bookings");
+const Car = require("../models/cars");
+const Booking = require("../models/bookings");
 
 const s3 = require("../middleware/s3");
 

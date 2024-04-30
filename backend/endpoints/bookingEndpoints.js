@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { default: mongoose } = require("mongoose");
 
-const User = require("../models/Users");
-const Booking = require("../models/Bookings");
-const Car = require("../models/Cars");
+const User = require("../models/users");
+const Booking = require("../models/bookings");
+const Car = require("../models/cars");
 
 const sendEmail = require("../cronJobs/sendEmail");
 
