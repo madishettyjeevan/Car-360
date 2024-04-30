@@ -10,7 +10,7 @@ import axios from '../../axios';
 
 import "./bookCar.css";
 
-export default function BookCar({ carToBeBooked }) {
+export default function BookCar({ setBookingData, carToBeBooked }) {
     const { userId, isLoggedIn } = useContext(UserContext);
     const { carId } = useParams();
     const navigate = useNavigate();
@@ -33,36 +33,6 @@ export default function BookCar({ carToBeBooked }) {
         }
         : {};
 
-    const bookCar = async (e) => {
-        try {
-            const formData = new FormData(e.target);
-            e.preventDefault();
-            const bookingData = {
-                hours: formData.get('hours')
-            }
-            setLoading(true);
-            const response = await axios.post(`/booking/book/${userId}/${carId}`, bookingData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            setPopUpText(response.data.message);
-            setIsPopUpOpen(true);
-        } catch (error) {
-            console.log(error);
-            if (error?.response?.data?.message) {
-                setPopUpText(error?.response?.data?.message);
-            }
-            else {
-                setPopUpText("Something Went Wrong")
-            }
-            setIsPopUpOpen(true);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-
     useEffect(() => {
         if (!isLoggedIn) {
             setPopUpText("Unautharized..., Please Log in...");
@@ -70,6 +40,17 @@ export default function BookCar({ carToBeBooked }) {
         }
     // eslint-disable-next-line
     }, []);
+
+    const bookCar = async (e) => {  
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const bookingData = {
+            hours: formData.get('hours'),
+            ...carToBeBooked
+        }
+        setBookingData(bookingData);
+        navigate(`/book-car/payment/${carId}`);
+    }
 
     return (
         <>
@@ -92,7 +73,7 @@ export default function BookCar({ carToBeBooked }) {
                             <Row>
                                 <Col className="my-2" xs={12} md={6} lg={6}>
                                     <Form.Group controlId="startDate">
-                                        <Form.Control min="1" type="number" name="hours" placeholder="No. of hours" className="no-spinner"/>
+                                        <Form.Control required min="1" type="number" name="hours" placeholder="No. of hours" className="no-spinner"/>
                                     </Form.Group>
                                 </Col>
                                 <Col className="my-2" xs={12} md={6} lg={6}>

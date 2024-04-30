@@ -29,6 +29,7 @@ router.post("/register-user", async(req, res) => {
         return res.status(500).json({message:"Internal server error"});
     }
 });
+
 router.post("/login-user", async(req, res) => {
     try{
         const {email, password} = req.body;
@@ -45,7 +46,5 @@ router.post("/login-user", async(req, res) => {
         return res.status(500).json({message:"Internal server error"});
     }
 });
-
-//Exporting the router object to make defined routes accessible in other modules
 
 module.exports = router;

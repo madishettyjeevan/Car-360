@@ -1,5 +1,5 @@
 import React from 'react';
-import './popup.css'; // Make sure to create this CSS file for styling
+import './popup.css';
 
 const PopUp = ({ isOpen, close, text }) => {
     if (!isOpen) return null;
@@ -7,8 +7,7 @@ const PopUp = ({ isOpen, close, text }) => {
     return (
         <div className={`popup-overlay ${isOpen ? 'active' : ''}`}>
             <div className="popup-content">
-                <button className="close-btn" onClick={close}>&times;</button>
-                {/* <h2 className="popup-title">Dynamic Title Here</h2> Example title */}
+                <button id="close-btn" onClick={close}>&times;</button>
                 <p>{text}</p>
             </div>
         </div>

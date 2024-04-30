@@ -36,33 +36,34 @@
   transform: scale(1);
 }
 
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
+.popup-content button#close-btn {
   font-size: 24px; /* Larger close button for better interaction */
   color: #606060; /* Subtle color for the close button */
   border: none;
   background: none;
   cursor: pointer;
   transition: color 0.2s ease-in-out;
+  background-image: linear-gradient(to top right, #ffffff, #f0f3f5);
 }
 
-.close-btn:hover {
-  color: #ff4569; /* Bright color on hover for visibility */
+.popup-content button#close-btn:hover {
+  color: #ff4569;
 }
 
-/* Styling for content */
+.popup-content{
+  display: flex;
+  flex-direction: column;
+}
+
 .popup-content p {
-  color: #333; /* Dark color for text for readability */
+  color: #333;
   font-size: 16px;
   line-height: 1.6;
 }
 
-/* Optional: Add a title with a different color */
 .popup-title {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #007bff; /* A bright, attention-grabbing color for titles */
+  color: #007bff;
 }

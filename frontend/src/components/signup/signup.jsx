@@ -15,7 +15,8 @@ const Register = () => {
     const navigate = useNavigate();
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [popUpText, setpopUpText] = useState("")
+    const [popUpText, setpopUpText] = useState("");
+    // eslint-disable-next-line
     const [isBackgroundBlurred, setIsBackgroundBlurred] = useState(false);
     const blurredBackgroundStyles = isBackgroundBlurred
         ? {
@@ -34,9 +35,9 @@ const Register = () => {
         e.preventDefault();
         try{
             setLoading(true);
-            const response = await axios.post('/auth/register-admin', {email,password,username})
-            console.log(response.data);
-            navigate(`/dashboard/${response.data.user.username}`);
+            // eslint-disable-next-line
+            const response = await axios.post('/auth/register-user', {email,password,username})
+            navigate(`/`);
         }catch(error){
             console.log(error);
             setLoading(false);

@@ -1,23 +1,22 @@
-// src/components/Login.js
-import React,{useState} from 'react';
+import React,{ useState } from 'react';
 import './login.css';
 import {useNavigate,Link} from 'react-router-dom';
-
 import axios from '../../axios';
 
 import PopUp from "../../components/popup/popup";
 import Loader from '../../components/loader/loader';
 
 
-const Login = () => {
-    const [email, setemail] = useState('');
+const Login = ({setUser}) => {
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
 
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [popUpText, setpopUpText] = useState("")
+    const [popUpText, setPopUpText] = useState("");
+    // eslint-disable-next-line
     const [isBackgroundBlurred, setIsBackgroundBlurred] = useState(false);
     const blurredBackgroundStyles = isBackgroundBlurred
         ? {
@@ -35,16 +34,22 @@ const Login = () => {
     const handleClick = async(e) => {
         e.preventDefault();
         try{
-            const response = await axios.post('/auth/login-admin', {email,password})
-            navigate(`/dashboard/${response.data.user.username}`);
+            const response = await axios.post('/auth/login-user', {email,password});
+            setUser({
+                username: response.data.user.username,
+                userId: response.data.user._id,
+                email: response.data.user.email,
+                isLoggedIn:true
+            });
+            navigate(`/dashboard`);
         }catch(error){
             console.log(error);
             setLoading(false);
             if(error?.response?.data?.message){
-                setpopUpText(error?.response?.data?.message);
+                setPopUpText(error?.response?.data?.message);
             }
             else{
-                setpopUpText("Something Went Wrong")
+                setPopUpText("Something Went Wrong")
             }
             setIsPopUpOpen(true);
         }
@@ -66,7 +71,7 @@ const Login = () => {
                             type="email" 
                             id="email" 
                             value={email}
-                            onChange={(e)=>setemail(e.target.value)}
+                            onChange={(e)=>setEmail(e.target.value)}
                             required />
                         <label htmlFor="email">Email</label>
                     </div>
