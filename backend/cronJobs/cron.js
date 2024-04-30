@@ -1,8 +1,8 @@
 const cron = require('node-cron');
 
 const sendEmail = require("./sendEmail");
-const Booking = require("../models/Bookings");
-const Cars = require('../models/Cars');
+const Booking = require("../models/bookings");
+const Cars = require('../models/cars');
 const { default: mongoose } = require('mongoose');
 
 // 1) Cron job to send an email when someone books a car (runs every 10 minutes)
