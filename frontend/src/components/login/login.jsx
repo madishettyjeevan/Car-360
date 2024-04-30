@@ -60,7 +60,7 @@ const Login = ({setUser}) => {
             {loading && <Loader />}
             <div className="login-box">
                 {/* Catchy Heading */}
-                <h1 className="login-title">Rev Up Your Management</h1>
+                <h1 className="login-title">Rev Up Your Management.</h1>
                 {/* Motivational Text */}
                 <p className="login-motivation">
                     Streamline your automotive operations with precision. Sign in to take control of your inventory like never before.
