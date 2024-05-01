@@ -7,8 +7,11 @@ import "./Navbar.css";
 
 export default function NavBar() {
 
+
+    
     const navigate = useNavigate();
 
+    
     const { isLoggedIn, username } = useContext(UserContext);
     return (
         <>
